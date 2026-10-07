@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Benihime Studio — every manga is a series waiting to happen</title>
+<meta name="description" content="Benihime Studio adapts finished manga, webtoons and novels into anime episodes without losing a single character, scar or plot thread.">
+<meta property="og:title" content="Benihime Studio">
+<meta property="og:description" content="Every manga is a series waiting to happen.">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='4' width='56' height='56' rx='6' fill='%23C8102E'/%3E%3Ctext x='32' y='44' font-size='32' text-anchor='middle' fill='white' font-family='serif'%3E%E7%B4%85%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #000;
+    --paper: #fff;
+    --hanko: #C8102E;
+    --tone: #E9E9E9;
+    --tone-2: #CFCFCF;
+    --grey: #555;
+    --display: "Dela Gothic One", "Arial Black", Impact, sans-serif;
+    --body: "Zen Kaku Gothic New", "Hiragino Sans", "Segoe UI", system-ui, sans-serif;
+    --wrap: 1180px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  button, input, select { font: inherit; color: inherit; }
+  :focus-visible { outline: 3px solid var(--hanko); outline-offset: 3px; }
+  .wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 24px; }
+  h1, h2, h3 { margin: 0; font-weight: 400; }
+  h1, h2 { font-family: var(--display); line-height: 1.08; letter-spacing: -0.01em; }
+  h2 { font-size: clamp(32px, 4.6vw, 54px); }
+  h3 { font-weight: 900; font-size: 19px; }
+  p { margin: 0; }
+  .kicker-jp { writing-mode: vertical-rl; font-weight: 900; font-size: 15px; letter-spacing: 0.3em; color: var(--hanko); }
+  .tone, .pn.tone { background-image: radial-gradient(#000 1px, transparent 1.2px); background-size: 7px 7px; }
+  .tone-light, .pn.tone-light { background-image: radial-gradient(rgba(0,0,0,0.22) 1px, transparent 1.2px); background-size: 6px 6px; }
+  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 22px; border: 3px solid var(--ink); background: var(--paper); font-weight: 900; text-decoration: none; cursor: pointer; box-shadow: 5px 5px 0 var(--ink); transition: transform .12s ease, box-shadow .12s ease; }
+  .btn:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--ink); }
+  .btn:active { transform: translate(3px, 3px); box-shadow: 2px 2px 0 var(--ink); }
+  .btn.red { background: var(--hanko); color: #fff; }
+  section { padding: 110px 0; position: relative; }
+
+  /* top bar */
+  .bar { border-bottom: 3px solid var(--ink); background: var(--paper); position: sticky; top: 0; z-index: 30; }
+  .bar .wrap { display: flex; align-items: center; justify-content: space-between; height: 62px; }
+  .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; font-family: var(--display); font-size: 19px; }
+  .stamp { width: 36px; height: 36px; background: var(--hanko); color: #fff; display: grid; place-items: center; font-weight: 900; font-size: 18px; border-radius: 4px; transform: rotate(-4deg); }
+  .bar nav { display: flex; gap: 26px; align-items: center; font-weight: 700; font-size: 15px; }
+  .bar nav a { text-decoration: none; }
+  .bar nav a:hover { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 6px; }
+  .bar .btn { padding: 8px 14px; box-shadow: 3px 3px 0 var(--ink); }
+  @media (max-width: 860px) { .bar nav a:not(.btn) { display: none; } }
+
+  /* hero: a manga page */
+  .hero { padding: 64px 0 90px; }
+  .hero .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+  .hero h1 { font-size: clamp(44px, 6.4vw, 84px); }
+  .hero h1 .red { color: var(--hanko); }
+  .hero .sub { margin-top: 24px; font-size: 20px; max-width: 520px; }
+  .hero .ctas { margin-top: 34px; display: flex; gap: 16px; flex-wrap: wrap; }
+  .page { display: grid; grid-template-columns: 1.2fr 1fr; grid-template-rows: 1.1fr 0.9fr 1fr; gap: 10px; aspect-ratio: 3 / 4; padding: 14px; border: 3px solid var(--ink); background: var(--paper); box-shadow: 10px 10px 0 var(--ink); position: relative; }
+  .pn { border: 3px solid var(--ink); position: relative; overflow: hidden; background-color: var(--paper); }
+  .pn.a { grid-column: 1 / 3; }
+  .pn.b { grid-row: 2 / 4; }
+  .speed { background: repeating-conic-gradient(from 0deg at 72% 55%, #000 0deg 1.2deg, transparent 1.2deg 7deg); }
+  .speed::after { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 72% 55%, #fff 0 22%, transparent 48%); }
+  .sfx { position: absolute; font-family: var(--display); color: var(--hanko); -webkit-text-stroke: 2px #000; z-index: 2; transform: rotate(-12deg); }
+  .pn.a .sfx { font-size: clamp(38px, 5vw, 64px); left: 14%; top: 18%; }
+  .slash { position: absolute; z-index: 2; left: 42%; top: 20%; width: 46%; height: 60%; border-top: 6px solid #000; border-radius: 50% 50% 0 0; transform: rotate(18deg); }
+  .bubble { position: absolute; background: #fff; border: 3px solid #000; border-radius: 50%; padding: 18px 16px; font-weight: 900; font-size: clamp(12px, 1.3vw, 15px); text-align: center; line-height: 1.25; }
+  .pn.b .bubble { left: 12%; top: 14%; width: 74%; }
+  .pn.b .eye { position: absolute; bottom: 12%; left: 18%; width: 64%; height: 22%; border-top: 5px solid #000; border-radius: 50% 50% 0 0; }
+  .pn.b .eye::after { content: ""; position: absolute; left: 40%; top: 8px; width: 22%; aspect-ratio: 1; background: #000; border-radius: 50%; }
+  .pn.c .seal-big { position: absolute; inset: 0; margin: auto; width: 70%; aspect-ratio: 1; height: auto; background: var(--hanko); border-radius: 50%; display: grid; place-items: center; color: #fff; font-weight: 900; font-size: clamp(30px, 4vw, 52px); letter-spacing: 0.04em; }
+  .pn.d { display: flex; align-items: flex-end; padding: 12px; }
+  .pn.d p { background: #fff; border: 2px solid #000; padding: 6px 10px; font-weight: 700; font-size: clamp(11px, 1.15vw, 14px); line-height: 1.35; position: relative; z-index: 1; }
+  .page .jp { position: absolute; right: -44px; top: 30px; }
+  @media (max-width: 900px) { .hero .wrap { grid-template-columns: 1fr; } .page { max-width: 460px; } .page .jp { display: none; } }
+
+  /* section headings */
+  .head { display: grid; grid-template-columns: auto 1fr; gap: 26px; align-items: start; margin-bottom: 48px; }
+  .head .num { font-family: var(--display); font-size: 22px; color: #fff; background: var(--ink); width: 54px; height: 54px; display: grid; place-items: center; }
+  .head p { margin-top: 14px; font-size: 19px; max-width: 640px; color: #222; }
+
+  /* demo 1: direct an episode */
+  .director { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 3px solid var(--ink); box-shadow: 10px 10px 0 var(--ink); }
+  .controls { padding: 30px; border-right: 3px solid var(--ink); display: grid; gap: 22px; }
+  .field label, .field .lab { display: block; font-weight: 900; margin-bottom: 8px; }
+  .seg { display: flex; flex-wrap: wrap; gap: 8px; }
+  .seg button { border: 2.5px solid #000; background: #fff; padding: 7px 14px; font-weight: 700; cursor: pointer; }
+  .seg button[aria-pressed="true"] { background: #000; color: #fff; }
+  input[type=range] { width: 100%; accent-color: var(--hanko); }
+  .rangeval { font-family: var(--display); font-size: 20px; }
+  .endrow { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 10px; }
+  .endrow input { width: 82px; border: 2.5px solid #000; padding: 6px 8px; }
+  .blueprint { padding: 30px; background: var(--paper); position: relative; }
+  .blueprint::before { content: ""; position: absolute; inset: 0; opacity: .5; pointer-events: none; }
+  .bp-title { font-family: var(--display); font-size: 24px; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .bp-title span { font-family: var(--body); font-size: 13px; font-weight: 900; color: var(--hanko); border: 2px solid var(--hanko); padding: 2px 8px; transform: rotate(-3deg); }
+  .bp { margin-top: 18px; display: grid; gap: 12px; }
+  .bp .row { display: grid; grid-template-columns: 130px 1fr; gap: 12px; border-bottom: 2px dashed #000; padding-bottom: 10px; }
+  .bp .k { font-weight: 900; }
+  .tagl { display: inline-block; font-size: 12px; font-weight: 900; padding: 1px 7px; margin-left: 6px; border: 2px solid #000; vertical-align: 1px; }
+  .tagl.lock { background: #000; color: #fff; }
+  .tagl.inf { background: #fff; color: var(--hanko); border-color: var(--hanko); }
+  .curve { margin-top: 18px; height: 70px; border: 2.5px solid #000; position: relative; }
+  .curve svg { width: 100%; height: 100%; display: block; }
+  .bp-note { margin-top: 14px; font-size: 14px; color: var(--grey); }
+  @media (max-width: 900px) { .director { grid-template-columns: 1fr; } .controls { border-right: none; border-bottom: 3px solid var(--ink); } .bp .row { grid-template-columns: 1fr; gap: 2px; } }
+
+  /* demo 2: one panel, eight beats */
+  .beats-wrap { display: grid; grid-template-columns: 0.8fr 2fr; gap: 28px; align-items: stretch; }
+  .source-panel { border: 3px solid #000; position: relative; min-height: 300px; overflow: hidden; }
+  .source-panel .sfx { font-size: 56px; left: 10%; top: 12%; }
+  .source-panel .cap { position: absolute; bottom: 0; left: 0; right: 0; background: #000; color: #fff; font-weight: 700; padding: 10px 14px; font-size: 14px; }
+  .strip { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; }
+  .frame { border: 3px solid #000; aspect-ratio: 3 / 4; display: grid; place-items: center; background: #fff; cursor: pointer; padding: 0; position: relative; transition: transform .12s; }
+  .frame svg { width: 80%; height: 70%; }
+  .frame .fn { position: absolute; top: 4px; left: 6px; font-weight: 900; font-size: 12px; }
+  .frame[aria-pressed="true"] { background: #000; transform: translateY(-6px); }
+  .frame[aria-pressed="true"] svg * { stroke: #fff; }
+  .frame[aria-pressed="true"] svg .fill { fill: #fff; }
+  .frame[aria-pressed="true"] .fn { color: #fff; }
+  .frame[aria-pressed="true"] svg .hit { fill: var(--hanko); stroke: var(--hanko); }
+  .beat-info { margin-top: 22px; border: 3px solid #000; padding: 20px 22px; display: grid; grid-template-columns: 1fr auto; gap: 18px; align-items: center; min-height: 110px; }
+  .beat-info h3 { font-family: var(--display); font-weight: 400; font-size: 26px; }
+  .beat-info p { margin-top: 4px; }
+  .timeline { margin-top: 14px; height: 10px; border: 2.5px solid #000; position: relative; }
+  .timeline i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--hanko); width: 0; transition: width .25s ease; }
+  @media (max-width: 900px) { .beats-wrap { grid-template-columns: 1fr; } .strip { grid-template-columns: repeat(4, 1fr); } .source-panel { min-height: 220px; } }
+
+  /* demo 3: it remembers */
+  .remember-top { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; margin-bottom: 26px; }
+  .toggle { display: inline-flex; border: 3px solid #000; box-shadow: 5px 5px 0 #000; }
+  .toggle button { border: none; background: #fff; padding: 12px 18px; font-weight: 900; cursor: pointer; }
+  .toggle button[aria-pressed="true"] { background: #000; color: #fff; }
+  .eps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .ep { border: 3px solid #000; padding: 14px 14px 16px; background: #fff; }
+  .ep .lab { font-family: var(--display); font-size: 18px; display: flex; justify-content: space-between; }
+  .ep svg { width: 100%; height: auto; display: block; margin: 8px 0; }
+  .ep ul { margin: 0; padding: 0; list-style: none; font-size: 14px; font-weight: 700; }
+  .ep li { display: flex; justify-content: space-between; border-top: 1.5px dashed #000; padding: 4px 0; }
+  .ep li.bad span { color: var(--hanko); }
+  .remember-note { margin-top: 20px; font-size: 16px; min-height: 52px; }
+  @media (max-width: 900px) { .eps { grid-template-columns: 1fr 1fr; } }
+
+  /* studio line */
+  .line { display: grid; grid-template-columns: 1fr 1.1fr 1.6fr 1fr; gap: 0; border: 3px solid #000; }
+  .line > div { padding: 24px 22px; border-right: 3px solid #000; position: relative; }
+  .line > div:last-child { border-right: none; }
+  .line .big { font-family: var(--display); font-size: 26px; display: block; margin-bottom: 6px; }
+  .line .kyo { background: #000; color: #fff; }
+  .line .kyo .big { color: var(--hanko); }
+  .engines { display: grid; gap: 12px; }
+  .engines div b { font-family: var(--display); font-weight: 400; font-size: 20px; margin-right: 8px; }
+  .align-bar { border: 3px solid #000; border-top: none; padding: 14px 22px; font-weight: 700; }
+  .align-bar b { font-family: var(--display); font-weight: 400; margin-right: 10px; }
+  @media (max-width: 900px) { .line { grid-template-columns: 1fr; } .line > div { border-right: none; border-bottom: 3px solid #000; } .line > div:last-child { border-bottom: none; } }
+
+  /* investors */
+  .investors { background: #000; color: #fff; }
+  .investors h2 { color: #fff; }
+  .inv { display: grid; grid-template-columns: 1.2fr 1fr; gap: 56px; align-items: start; }
+  .inv ol { list-style: none; margin: 30px 0 0; padding: 0; counter-reset: i; display: grid; gap: 22px; }
+  .inv li { display: grid; grid-template-columns: 46px 1fr; gap: 14px; }
+  .inv li::before { counter-increment: i; content: counter(i); font-family: var(--display); width: 46px; height: 46px; background: var(--hanko); display: grid; place-items: center; font-size: 20px; }
+  .inv li b { display: block; font-size: 19px; }
+  .inv li span { color: #BDBDBD; }
+  .ask { border: 3px solid #fff; padding: 30px; box-shadow: 10px 10px 0 var(--hanko); }
+  .ask .big { font-family: var(--display); font-size: 34px; line-height: 1.1; }
+  .ask p { margin-top: 12px; color: #D0D0D0; }
+  .ask .btn { margin-top: 24px; border-color: #fff; box-shadow: 5px 5px 0 #fff; }
+  @media (max-width: 900px) { .inv { grid-template-columns: 1fr; } }
+
+  /* credits */
+  .credits { background: #000; color: #fff; text-align: center; padding: 30px 0 120px; }
+  .credits h2 { color: #fff; font-size: 30px; letter-spacing: 0.2em; }
+  .roll { margin: 44px auto 0; max-width: 620px; display: grid; gap: 30px; }
+  .roll .role { font-size: 13px; letter-spacing: 0.3em; color: #9A9A9A; font-weight: 700; }
+  .roll .names { font-size: 22px; font-weight: 700; margin-top: 6px; line-height: 1.5; }
+  .roll .lead-name { font-family: var(--display); font-size: 36px; font-weight: 400; color: #fff; }
+  .credits .end { margin-top: 60px; font-family: var(--display); font-size: 22px; letter-spacing: 0.3em; color: var(--hanko); }
+
+  footer { border-top: 3px solid #000; padding: 54px 0; }
+  footer .wrap { display: grid; grid-template-columns: auto 1fr auto; gap: 34px; align-items: center; }
+  footer img { width: 120px; height: 120px; border: 3px solid #000; padding: 6px; }
+  footer .mail { font-family: var(--display); font-size: clamp(18px, 2.4vw, 26px); text-decoration: none; overflow-wrap: anywhere; }
+  footer small { color: var(--grey); display: block; margin-top: 6px; }
+  footer .src { font-size: 12.5px; color: var(--grey); max-width: 300px; }
+  @media (max-width: 860px) { footer .wrap { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="logo" href="#top"><span class="stamp" aria-hidden="true">紅</span>Benihime Studio</a>
+    <nav aria-label="Main">
+      <a href="#direct">Try it</a>
+      <a href="#beats">Panels to motion</a>
+      <a href="#remember">Continuity</a>
+      <a href="#investors">Investors</a>
+      <a class="btn red" href="mailto:benihime2027@gmail.com?subject=Investor%20deck%20request">Get the deck</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <h1>Every manga is a <span class="red">series</span> waiting to happen.</h1>
+        <p class="sub">Benihime Studio adapts finished manga, webtoons and novels into anime episodes, without losing a single character, scar or plot thread along the way.</p>
+        <div class="ctas">
+          <a class="btn red" href="#direct">Direct an episode ↓</a>
+          <a class="btn" href="mailto:benihime2027@gmail.com?subject=Investor%20deck%20request">Request the investor deck</a>
+        </div>
+      </div>
+      <div class="page" role="img" aria-label="An illustrated manga page: a sword-slash panel, a speech bubble, and the Benihime seal">
+        <div class="pn a speed"><span class="sfx" aria-hidden="true">ズバッ</span><span class="slash"></span></div>
+        <div class="pn b tone-light"><div class="bubble">Read it.<br>Then watch it.</div><span class="eye"></span></div>
+        <div class="pn c"><div class="seal-big">紅姫</div></div>
+        <div class="pn d tone"><p>Chapter 1 → Episode 1. Same story, now in motion.</p></div>
+        <span class="kicker-jp jp" aria-hidden="true">物語を、アニメに。</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="direct" style="background:#F6F6F6">
+    <div class="wrap">
+      <div class="head">
+        <div class="num">01</div>
+        <div>
+          <h2>Direct an episode.</h2>
+          <p>Before anything is generated, our adaptation director KYO asks the decisions that matter. Make them yourself, or let KYO propose and label its choice for your approval. Try it.</p>
+        </div>
+      </div>
+      <div class="director">
+        <div class="controls">
+          <div class="field"><span class="lab">Season</span>
+            <div class="seg" data-key="season"><button aria-pressed="true" data-v="12">12-episode mini</button><button aria-pressed="false" data-v="24">24-episode basic</button></div></div>
+          <div class="field"><label for="rt">Episode runtime <span class="rangeval" id="rtv">24</span> min</label>
+            <input id="rt" type="range" min="10" max="30" value="24"></div>
+          <div class="field"><span class="lab">Genre</span>
+            <div class="seg" data-key="genre"><button aria-pressed="true" data-v="action">Action</button><button aria-pressed="false" data-v="romance">Romance</button><button aria-pressed="false" data-v="mystery">Mystery</button><button aria-pressed="false" data-v="fantasy">Fantasy</button><button aria-pressed="false" data-v="slice">Slice of life</button></div></div>
+          <div class="field"><span class="lab">Pacing</span>
+            <div class="seg" data-key="pacing"><button aria-pressed="true" data-v="kyo">Let KYO decide</button><button aria-pressed="false" data-v="slow">Slow</button><button aria-pressed="false" data-v="balanced">Balanced</button><button aria-pressed="false" data-v="fast">Fast</button></div></div>
+          <div class="field"><span class="lab">Where should episode 1 end?</span>
+            <div class="seg" data-key="ending"><button aria-pressed="true" data-v="kyo">Let KYO suggest</button><button aria-pressed="false" data-v="me">I'll choose the page</button></div>
+            <div class="endrow" id="endrow" hidden><span>Chapter</span><input id="ch" type="number" min="1" value="3" aria-label="Chapter"><span>Page</span><input id="pg" type="number" min="1" value="17" aria-label="Page"></div>
+          </div>
+        </div>
+        <div class="blueprint" aria-live="polite">
+          <div class="bp-title">Episode 1 blueprint <span>Illustrative</span></div>
+          <div class="bp" id="bp"></div>
+          <div class="curve" aria-hidden="true"><svg viewBox="0 0 300 70" preserveAspectRatio="none"><path id="tcurve" d="" fill="none" stroke="#000" stroke-width="3"/><circle id="tpeak" r="6" fill="#C8102E" stroke="#000" stroke-width="2"/></svg></div>
+          <p class="bp-note">Tension curve across the episode. Every inferred choice waits for your approval; anything you lock is never silently changed.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="beats">
+    <div class="wrap">
+      <div class="head">
+        <div class="num">02</div>
+        <div>
+          <h2>One panel. Eight beats.</h2>
+          <p>A manga panel captures one frozen instant. Animation needs everything around it. KYO breaks the moment into beats, and the source hit stays the canonical event. Press play, or click any frame.</p>
+        </div>
+      </div>
+      <div class="beats-wrap">
+        <div class="source-panel speed"><span class="sfx" aria-hidden="true">ズバッ</span><span class="slash" style="left:30%;top:30%;width:58%"></span><div class="cap">The source: one panel, blade already landing</div></div>
+        <div>
+          <div class="strip" id="strip"></div>
+          <div class="timeline" aria-hidden="true"><i id="tl"></i></div>
+          <div class="beat-info">
+            <div><h3 id="bt">Wind-up</h3><p id="bd"></p></div>
+            <button class="btn" id="play" type="button">▶ Play</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="remember" style="background:#F6F6F6">
+    <div class="wrap">
+      <div class="head">
+        <div class="num">03</div>
+        <div>
+          <h2>It remembers. Every episode.</h2>
+          <p>Most AI tools generate one clip at a time and forget the rest. Here is the same character across a season, tracked two ways.</p>
+        </div>
+      </div>
+      <div class="remember-top">
+        <div class="toggle" role="group" aria-label="Compare"><button id="tg-gen" aria-pressed="true">Typical AI generator</button><button id="tg-ben" aria-pressed="false">Benihime</button></div>
+      </div>
+      <div class="eps" id="eps"></div>
+      <p class="remember-note" id="rnote"></p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="head">
+        <div class="num">04</div>
+        <div>
+          <h2>The studio behind it.</h2>
+          <p>Five systems, one shared story memory. KYO decides what gets made and checks it; specialist engines make it.</p>
+        </div>
+      </div>
+      <div class="line">
+        <div><span class="big">Source</span>A finished manga, webtoon or novel, read page by page into traceable evidence.</div>
+        <div class="kyo"><span class="big">KYO</span>The adaptation director. Plans each episode, asks the creator, routes production, grades, repairs and locks.</div>
+        <div><div class="engines">
+          <div><b>GUIDER</b>understands the story and keeps it straight</div>
+          <div><b>KAGE</b>keeps every character looking like themselves</div>
+          <div><b>JARVIS</b>animates, alongside the best external models</div>
+        </div></div>
+        <div class="tone-light" style="background-color:#fff"><span class="big" style="background:#fff;display:inline">Episode</span><p style="background:#fff;margin-top:6px">Voiced, scored and locked into season memory.</p></div>
+      </div>
+      <div class="align-bar"><b>ALIGN</b>coordinates the whole studio underneath.</div>
+    </div>
+  </section>
+
+  <section class="investors" id="investors">
+    <div class="wrap inv">
+      <div>
+        <h2>For investors.</h2>
+        <ol>
+          <li><div><b>A wedge studios pay for first.</b><span>KAGE keeps approved characters and style consistent while making revisions faster. Paid pilots come before scale.</span></div></li>
+          <li><div><b>A market sized from buyers.</b><span>$142.5M base serviceable market today, built bottom-up, with a $0.3B–$3.0B opportunity as the category expands.</span></div></li>
+          <li><div><b>Deep tech, not a wrapper.</b><span>Structured story state, selective repair and model-agnostic routing: the layer above video models, not another one.</span></div></li>
+          <li><div><b>Built with the community.</b><span>Rights-cleared data, opt-in training, and humans approve everything that becomes canon.</span></div></li>
+        </ol>
+      </div>
+      <div class="ask">
+        <div class="big">Seed round open.</div>
+        <p>The full deck, financial scenarios and our private architecture repository are available on request.</p>
+        <a class="btn red" href="mailto:benihime2027@gmail.com?subject=Investor%20deck%20request">Request the deck</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="credits" aria-labelledby="credits-h">
+    <div class="wrap">
+      <h2 id="credits-h">CREDITS</h2>
+      <div class="roll">
+        <div><div class="role">Founder</div><div class="names lead-name">Shaurya Sharma</div></div>
+        <div><div class="role">Co-founders</div><div class="names">Milind Koul<br>Shashank Pandurang Kamat</div></div>
+        <div><div class="role">Directors and co-founders</div><div class="names">Jaivardhan Singh Chauhan<br>Aaditya Bhushan Yeola</div></div>
+        <div><div class="role">Team lead and co-founder</div><div class="names">Keshav J.</div></div>
+      </div>
+      <div class="end">To be continued</div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <img src="data:image/png;base64,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" alt="QR code that opens an email to benihime2027@gmail.com">
+    <div>
+      <a class="mail" href="mailto:benihime2027@gmail.com">benihime2027@gmail.com</a>
+      <small>© 2026 Benihime Studio. All rights reserved.</small>
+    </div>
+    <p class="src">Market figure: Benihime bottom-up planning model, not an industry estimate. Demos on this page are illustrations of how the product works.</p>
+  </div>
+</footer>
+
+<script>
+(() => {
+  // ---------- 01 direct an episode ----------
+  const state = { season: "12", genre: "action", pacing: "kyo", ending: "kyo" };
+  const profiles = {
+    action:   { label: "Action",        pace: "Fast build with breathing room before a late peak", peak: 0.82, shape: [0.25, 0.4, 0.35, 0.6, 0.95, 0.5], end: "on a cliffhanger right after the first decisive clash" },
+    romance:  { label: "Romance",       pace: "Slow-burn, dialogue-led, with a warm turn near the end", peak: 0.86, shape: [0.2, 0.3, 0.35, 0.45, 0.7, 0.55], end: "on a quiet close after the first real conversation" },
+    mystery:  { label: "Mystery",       pace: "Measured, clue by clue, holding the reveal back", peak: 0.92, shape: [0.3, 0.35, 0.45, 0.5, 0.65, 0.97], end: "on a reveal that reframes everything so far" },
+    fantasy:  { label: "Fantasy",       pace: "Wonder first, then conflict entering the world", peak: 0.75, shape: [0.2, 0.45, 0.35, 0.55, 0.9, 0.6], end: "at the moment the world's rules turn dangerous" },
+    slice:    { label: "Slice of life", pace: "Gentle, episodic, with small emotional beats", peak: 0.6, shape: [0.2, 0.3, 0.25, 0.35, 0.45, 0.3], end: "on a small, satisfying resolution" },
+  };
+  const paceText = { slow: "Slow, as you set it", balanced: "Balanced, as you set it", fast: "Fast, as you set it" };
+  const $ = (id) => document.getElementById(id);
+  const tag = (locked) => locked ? '<span class="tagl lock">Locked by you</span>' : '<span class="tagl inf">KYO-inferred</span>';
+
+  function render() {
+    const p = profiles[state.genre];
+    const rt = $("rt").value; $("rtv").textContent = rt;
+    const pacingLocked = state.pacing !== "kyo";
+    const endLocked = state.ending === "me";
+    const rows = [
+      ["Season", `${state.season} episodes ${tag(true)}`],
+      ["Runtime", `${rt} minutes ${tag(true)}`],
+      ["Genre", `${p.label} ${tag(true)}`],
+      ["Pacing", pacingLocked ? `${paceText[state.pacing]} ${tag(true)}` : `${p.pace} <br><small>From Trinity's ${p.label.toLowerCase()} precedent</small> ${tag(false)}`],
+      ["Episode ends", endLocked ? `Chapter ${$("ch").value || "?"}, page ${$("pg").value || "?"} ${tag(true)}` : `Suggested ${p.end} ${tag(false)}`],
+    ];
+    $("bp").innerHTML = rows.map(([k, v]) => `<div class="row"><div class="k">${k}</div><div>${v}</div></div>`).join("");
+    let shape = p.shape.slice();
+    if (state.pacing === "slow") shape = shape.map((v, i) => i < 4 ? v * 0.7 : v);
+    if (state.pacing === "fast") shape = shape.map((v) => Math.min(0.97, v * 1.15 + 0.05));
+    const pts = shape.map((v, i) => [i * (300 / (shape.length - 1)), 66 - v * 60]);
+    let d = `M ${pts[0][0]} ${pts[0][1]}`;
+    for (let i = 1; i < pts.length; i++) { const [x0, y0] = pts[i - 1], [x1, y1] = pts[i]; const cx = (x0 + x1) / 2; d += ` C ${cx} ${y0}, ${cx} ${y1}, ${x1} ${y1}`; }
+    $("tcurve").setAttribute("d", d);
+    const pk = pts.reduce((a, b) => (b[1] < a[1] ? b : a));
+    $("tpeak").setAttribute("cx", pk[0]); $("tpeak").setAttribute("cy", pk[1]);
+  }
+  document.querySelectorAll(".seg").forEach((g) => {
+    g.addEventListener("click", (e) => {
+      const b = e.target.closest("button"); if (!b) return;
+      g.querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+      state[g.dataset.key] = b.dataset.v;
+      if (g.dataset.key === "ending") $("endrow").hidden = b.dataset.v !== "me";
+      render();
+    });
+  });
+  ["rt", "ch", "pg"].forEach((id) => $(id).addEventListener("input", render));
+  render();
+
+  // ---------- 02 one panel, eight beats ----------
+  const S = 'stroke="#000" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"';
+  const beats = [
+    ["Wind-up", "Weight shifts back and the blade draws behind the shoulder.", `<path ${S} d="M50 70 L45 35"/><path ${S} d="M45 35 Q30 20 18 30"/><circle class="fill" cx="45" cy="25" r="7" fill="#000" stroke="#000"/>`],
+    ["Foot plant", "The front foot lands, locking the body for the strike.", `<path ${S} d="M30 90 L50 60 L70 90"/><path ${S} d="M50 60 L50 30"/><path ${S} d="M20 92 H80"/>`],
+    ["Blade path", "A fast arc across the frame, the motion the panel only implies.", `<path ${S} d="M15 70 Q50 5 88 40"/><path ${S} stroke-dasharray="4 8" d="M20 82 Q55 22 92 55"/>`],
+    ["Impact", "The exact instant the source panel shows. This beat stays canon.", `<path class="hit" stroke="#C8102E" stroke-width="3" fill="#C8102E" d="M50 20 L58 42 L82 40 L63 54 L72 78 L50 64 L28 78 L37 54 L18 40 L42 42 Z"/>`],
+    ["Reaction", "The opponent recoils; held for a fraction of a second.", `<path ${S} d="M60 85 L52 50 L66 28"/><circle class="fill" cx="70" cy="20" r="7" fill="#000" stroke="#000"/><path ${S} d="M22 40 H38 M18 52 H36 M22 64 H38"/>`],
+    ["Debris", "Dust and fragments respond to the force of the hit.", `<circle class="fill" cx="25" cy="70" r="4" fill="#000" stroke="#000"/><circle class="fill" cx="45" cy="50" r="6" fill="#000" stroke="#000"/><circle class="fill" cx="70" cy="64" r="3" fill="#000" stroke="#000"/><circle class="fill" cx="80" cy="35" r="5" fill="#000" stroke="#000"/><path ${S} d="M10 90 Q50 72 90 90"/>`],
+    ["Camera", "The camera pushes in and settles to sell the impact.", `<rect ${S} x="15" y="25" width="70" height="50"/><rect ${S} x="30" y="36" width="40" height="28"/><path ${S} d="M15 25 L30 36 M85 25 L70 36 M15 75 L30 64 M85 75 L70 64"/>`],
+    ["Recovery", "The fighter resets their stance; the scene can move on.", `<path ${S} d="M35 90 L50 62 L65 90"/><path ${S} d="M50 62 L50 30"/><path ${S} d="M50 42 L78 30"/><circle class="fill" cx="50" cy="22" r="7" fill="#000" stroke="#000"/>`],
+  ];
+  const strip = $("strip");
+  beats.forEach(([n, , svg], i) => {
+    const b = document.createElement("button");
+    b.className = "frame"; b.type = "button"; b.setAttribute("aria-pressed", "false"); b.setAttribute("aria-label", `Beat ${i + 1}: ${n}`);
+    b.innerHTML = `<span class="fn">${i + 1}</span><svg viewBox="0 0 100 100" aria-hidden="true">${svg}</svg>`;
+    b.addEventListener("click", () => { stop(); show(i); });
+    strip.appendChild(b);
+  });
+  let cur = 0, timer = null;
+  function show(i) {
+    cur = i;
+    [...strip.children].forEach((f, k) => f.setAttribute("aria-pressed", String(k === i)));
+    $("bt").textContent = `${i + 1}. ${beats[i][0]}`;
+    $("bd").textContent = beats[i][1];
+    $("tl").style.width = `${((i + 1) / beats.length) * 100}%`;
+  }
+  function stop() { clearInterval(timer); timer = null; $("play").textContent = "▶ Play"; }
+  $("play").addEventListener("click", () => {
+    if (timer) return stop();
+    $("play").textContent = "❚❚ Pause";
+    if (cur >= beats.length - 1) show(0);
+    timer = setInterval(() => { if (cur >= beats.length - 1) return stop(); show(cur + 1); }, 1100);
+  });
+  show(0);
+
+  // ---------- 03 it remembers ----------
+  const eps = [1, 4, 7, 10];
+  const gen = [
+    { scarf: "#C8102E", scar: true, hair: "spiky", bandage: false },
+    { scarf: "#2F5DA8", scar: false, hair: "spiky", bandage: false },
+    { scarf: "#C8102E", scar: true, hair: "round", bandage: false },
+    { scarf: "#2E8B57", scar: false, hair: "spiky", bandage: false },
+  ];
+  const ben = [
+    { scarf: "#C8102E", scar: true, hair: "spiky", bandage: false },
+    { scarf: "#C8102E", scar: true, hair: "spiky", bandage: false },
+    { scarf: "#C8102E", scar: true, hair: "spiky", bandage: true },
+    { scarf: "#C8102E", scar: true, hair: "spiky", bandage: true },
+  ];
+  function face(c) {
+    const hair = c.hair === "spiky"
+      ? '<path d="M28 46 L34 20 L44 36 L52 14 L60 34 L70 18 L74 46 Z" fill="#000"/>'
+      : '<path d="M27 50 Q50 6 75 50 Z" fill="#000"/>';
+    const scar = c.scar ? '<path d="M60 58 L68 70" stroke="#C8102E" stroke-width="3" stroke-linecap="round"/>' : "";
+    const band = c.bandage ? '<rect x="30" y="38" width="42" height="9" fill="#fff" stroke="#000" stroke-width="2.5"/><path d="M40 38 V47 M50 38 V47 M60 38 V47" stroke="#000" stroke-width="1.5"/>' : "";
+    return `<svg viewBox="0 0 100 110" aria-hidden="true"><circle cx="51" cy="58" r="25" fill="#fff" stroke="#000" stroke-width="3"/>${hair}<circle cx="42" cy="60" r="3" fill="#000"/><circle cx="60" cy="60" r="3" fill="#000"/>${scar}${band}<path d="M24 92 Q51 78 78 92 L82 106 H20 Z" fill="${c.scarf}" stroke="#000" stroke-width="3"/></svg>`;
+  }
+  const label = (c, ref, i) => {
+    const s = c.scarf === ref.scarf, sc = c.scar === ref.scar, h = c.hair === ref.hair;
+    const name = { "#C8102E": "red", "#2F5DA8": "blue", "#2E8B57": "green" }[c.scarf];
+    return `<li class="${s ? "" : "bad"}"><span>Scarf</span><span>${name}${s ? "" : " ✗"}</span></li>
+      <li class="${sc ? "" : "bad"}"><span>Scar</span><span>${c.scar ? "left cheek" : "missing ✗"}</span></li>
+      <li class="${h ? "" : "bad"}"><span>Hair</span><span>${c.hair}${h ? "" : " ✗"}</span></li>
+      <li><span>Injury</span><span>${c.bandage ? "bandaged" : "none"}</span></li>`;
+  };
+  function renderEps(mode) {
+    const set = mode === "gen" ? gen : ben;
+    $("eps").innerHTML = set.map((c, i) => `<div class="ep"><div class="lab"><span>Ep. ${eps[i]}</span><span>${i === 2 && mode === "ben" ? "⚔" : ""}</span></div>${face(c)}<ul>${label(c, set[0], i)}</ul></div>`).join("");
+    $("rnote").innerHTML = mode === "gen"
+      ? "<b>Typical generator:</b> each clip starts from scratch. The scarf changes colour, the scar comes and goes, and an injury from the fight in episode 7 is simply forgotten."
+      : "<b>Benihime:</b> the character's approved look is locked in shared story memory. She is wounded in episode 7, so the bandage carries into every later episode until the story says it heals.";
+    $("tg-gen").setAttribute("aria-pressed", String(mode === "gen"));
+    $("tg-ben").setAttribute("aria-pressed", String(mode === "ben"));
+  }
+  $("tg-gen").addEventListener("click", () => renderEps("gen"));
+  $("tg-ben").addEventListener("click", () => renderEps("ben"));
+  renderEps("gen");
+})();
+</script>
+</body>
+</html>
